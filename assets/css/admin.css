@@ -1,0 +1,426 @@
+/* API Extended Admin Styles */
+.api-extended-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.api-extended-card {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.api-extended-card h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #1d2327;
+    border-bottom: 2px solid #f0f0f1;
+    padding-bottom: 10px;
+}
+
+.version-badge {
+    background: #ff6b6b;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+/* Stats Cards */
+.stats-card {
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.stats-icon {
+    font-size: 2.5em;
+    margin-right: 15px;
+}
+
+.stats-content h3 {
+    margin: 0 0 5px 0;
+    font-size: 14px;
+    color: #646970;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stats-number {
+    font-size: 2em;
+    font-weight: bold;
+    color: #2271b1;
+}
+
+/* Forms */
+.api-form {
+    max-width: 100%;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #1d2327;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #8c8f94;
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.form-control:focus {
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+    outline: none;
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-actions {
+    margin-top: 25px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Buttons */
+.button-primary {
+    background: #2271b1;
+    border-color: #2271b1;
+}
+
+.button-primary:hover {
+    background: #135e96;
+    border-color: #135e96;
+}
+
+.button-secondary {
+    background: #f6f7f7;
+    border-color: #8c8f94;
+    color: #2c3338;
+}
+
+.button-secondary:hover {
+    background: #f0f0f1;
+    border-color: #787c82;
+}
+
+.button-danger {
+    background: #d63638;
+    border-color: #d63638;
+    color: white;
+}
+
+.button-danger:hover {
+    background: #b32d2e;
+    border-color: #b32d2e;
+}
+
+/* Result Containers */
+.result-container {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 4px;
+    display: none;
+}
+
+.result-container pre {
+    background: #f6f7f7;
+    padding: 15px;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-size: 12px;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* API Key Display */
+.api-key-display {
+    display: block;
+    background: #f1f1f1;
+    padding: 15px;
+    margin: 10px 0;
+    word-break: break-all;
+    font-family: monospace;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+/* Password Section */
+.password-section {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin: 15px 0;
+}
+
+.password-input {
+    flex: 1;
+    max-width: 300px;
+}
+
+/* Endpoints Grid */
+.endpoints-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.endpoint-group h3 {
+    margin-top: 0;
+    color: #2271b1;
+    font-size: 16px;
+}
+
+.endpoint-group ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.endpoint-group li {
+    margin-bottom: 8px;
+    padding: 8px;
+    background: #f6f7f7;
+    border-radius: 4px;
+    border-left: 3px solid #2271b1;
+}
+
+.endpoint-group strong {
+    color: #d63638;
+    margin-right: 5px;
+}
+
+.endpoint-group code {
+    background: #1d2327;
+    color: #f0f0f1;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+/* Quick Actions */
+.quick-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Recent List */
+.recent-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.recent-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.recent-list li:last-child {
+    border-bottom: none;
+}
+
+.recent-list a {
+    text-decoration: none;
+    color: #2271b1;
+    font-weight: 500;
+}
+
+.recent-list a:hover {
+    color: #135e96;
+}
+
+.post-date {
+    color: #646970;
+    font-size: 12px;
+}
+
+/* Media Upload */
+.media-upload-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.media-preview {
+    margin-left: 10px;
+    font-size: 14px;
+    color: #646970;
+}
+
+.media-preview img {
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 4px;
+}
+
+/* Tool Buttons */
+.tool-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+/* Media Library */
+.media-library-actions {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.media-library {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.media-item {
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    padding: 10px;
+    text-align: center;
+}
+
+.media-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+
+.media-item .media-title {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #646970;
+    word-break: break-word;
+}
+
+.media-loading {
+    text-align: center;
+    padding: 20px;
+    color: #646970;
+}
+
+/* Code Examples */
+.code-examples {
+    margin-top: 20px;
+}
+
+.code-examples h3 {
+    margin: 20px 0 10px 0;
+    color: #1d2327;
+    font-size: 16px;
+}
+
+.code-examples pre {
+    background: #1d2327;
+    color: #f0f0f1;
+    padding: 15px;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.code-examples code {
+    background: none;
+    padding: 0;
+}
+
+/* Usage Guide */
+.usage-guide ol {
+    margin-left: 20px;
+}
+
+.usage-guide li {
+    margin-bottom: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .api-extended-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .password-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .password-input {
+        max-width: none;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .form-actions .button {
+        width: 100%;
+    }
+    
+    .quick-actions {
+        flex-direction: column;
+    }
+    
+    .quick-actions .button {
+        width: 100%;
+    }
+}
+
+/* Notices */
+.notice {
+    padding: 12px;
+    margin: 15px 0;
+    border-left: 4px solid #fff;
+    border-radius: 4px;
+}
+
+.notice-success {
+    background: #edfaef;
+    border-left-color: #00a32a;
+    color: #1e4620;
+}
+
+.notice-error {
+    background: #fcf0f1;
+    border-left-color: #d63638;
+    color: #5c2a2d;
+}
+
+.notice-warning {
+    background: #fef8ee;
+    border-left-color: #dba617;
+    color: #5c4113;
+}
+
+.notice-info {
+    background: #f0f6fc;
+    border-left-color: #72aee6;
+    color: #2c4d69;
+}

@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-    // Generate API Key - 修改后的版本
+    // Generate API Key
     $('#generate-api-key').on('click', function() {
         var $button = $(this);
         var $result = $('#api-result');
@@ -21,22 +21,22 @@ jQuery(document).ready(function($) {
         })
         .done(function(response) {
             if (response.success) {
-                // 不再自动刷新，直接显示新密钥
+                // 显示新密钥
                 $result.html(
                     '<div class="notice notice-success">' +
                     '<h4>✅ ' + response.data.message + '</h4>' +
-                    '<p><strong>您的API密钥：</strong></p>' +
+                    '<p><strong>' + wpApiExtendedSettings.i18n.your_api_key + '</strong></p>' +
                     '<code class="api-key-display">' + response.data.api_key + '</code>' +
-                    '<p><strong>⚠️ 重要：请立即保存此密钥，关闭页面后将无法再次查看！</strong></p>' +
-                    '<button id="copy-api-key" class="button">复制密钥</button>' +
-                    '<button id="continue-after-save" class="button button-primary">我已保存，继续</button>' +
+                    '<p><strong>⚠️ ' + wpApiExtendedSettings.i18n.important_save_key + '</strong></p>' +
+                    '<button id="copy-api-key" class="button">' + wpApiExtendedSettings.i18n.copy_key + '</button>' +
+                    '<button id="continue-after-save" class="button button-primary">' + wpApiExtendedSettings.i18n.continue_after_save + '</button>' +
                     '</div>'
                 ).show();
                 
                 // 复制功能
                 $('#copy-api-key').on('click', function() {
                     navigator.clipboard.writeText(response.data.api_key).then(function() {
-                        alert('API密钥已复制到剪贴板！');
+                        alert(wpApiExtendedSettings.i18n.key_copied);
                     });
                 });
                 
@@ -48,25 +48,25 @@ jQuery(document).ready(function($) {
             } else {
                 $result.html(
                     '<div class="notice notice-error">' +
-                    '<p>❌ 生成失败: ' + response.data + '</p>' +
+                    '<p>❌ ' + wpApiExtendedSettings.i18n.generate_failed + ': ' + response.data + '</p>' +
                     '</div>'
                 ).show();
-                $button.prop('disabled', false).text('Generate New API Key');
+                $button.prop('disabled', false).text(wpApiExtendedSettings.i18n.generate_button);
             }
         })
         .fail(function(xhr) {
-            var errorMessage = '请求失败: ';
+            var errorMessage = wpApiExtendedSettings.i18n.request_failed + ': ';
             
             if (xhr.status === 500) {
-                errorMessage += '服务器内部错误 (500) - 这通常是由于PHP代码错误导致的';
+                errorMessage += wpApiExtendedSettings.i18n.server_error + ' (500) - ' + wpApiExtendedSettings.i18n.php_error_hint;
                 // 显示详细错误信息用于调试
                 if (xhr.responseText) {
-                    errorMessage += '<br><br><strong>详细错误：</strong><br>' + xhr.responseText;
+                    errorMessage += '<br><br><strong>' + wpApiExtendedSettings.i18n.detail_error + '</strong><br>' + xhr.responseText;
                 }
             } else if (xhr.responseJSON && xhr.responseJSON.data) {
                 errorMessage += xhr.responseJSON.data;
             } else {
-                errorMessage += xhr.statusText || '未知错误';
+                errorMessage += xhr.statusText || wpApiExtendedSettings.i18n.unknown_error;
             }
             
             $result.html(
@@ -74,7 +74,7 @@ jQuery(document).ready(function($) {
                 '<p>❌ ' + errorMessage + '</p>' +
                 '</div>'
             ).show();
-            $button.prop('disabled', false).text('Generate New API Key');
+            $button.prop('disabled', false).text(wpApiExtendedSettings.i18n.generate_button);
         });
     });
     
@@ -83,11 +83,11 @@ jQuery(document).ready(function($) {
         var $button = $(this);
         var $result = $('#api-result');
         
-        if (!confirm('This will forcefully generate a new API key, deleting any existing records. Continue?')) {
+        if (!confirm(wpApiExtendedSettings.i18n.confirm_force_generate)) {
             return;
         }
         
-        $button.prop('disabled', true).text('Force Generating...');
+        $button.prop('disabled', true).text(wpApiExtendedSettings.i18n.force_generating);
         $result.hide().empty();
         
         $.ajax({
@@ -103,17 +103,17 @@ jQuery(document).ready(function($) {
                 $result.html(
                     '<div class="notice notice-success">' +
                     '<h4>✅ ' + response.data.message + '</h4>' +
-                    '<p><strong>您的API密钥：</strong></p>' +
+                    '<p><strong>' + wpApiExtendedSettings.i18n.your_api_key + '</strong></p>' +
                     '<code class="api-key-display">' + response.data.api_key + '</code>' +
-                    '<p><strong>⚠️ 重要：请立即保存此密钥，关闭页面后将无法再次查看！</strong></p>' +
-                    '<button id="copy-api-key" class="button">复制密钥</button>' +
-                    '<button id="continue-after-save" class="button button-primary">我已保存，继续</button>' +
+                    '<p><strong>⚠️ ' + wpApiExtendedSettings.i18n.important_save_key + '</strong></p>' +
+                    '<button id="copy-api-key" class="button">' + wpApiExtendedSettings.i18n.copy_key + '</button>' +
+                    '<button id="continue-after-save" class="button button-primary">' + wpApiExtendedSettings.i18n.continue_after_save + '</button>' +
                     '</div>'
                 ).show();
                 
                 $('#copy-api-key').on('click', function() {
                     navigator.clipboard.writeText(response.data.api_key).then(function() {
-                        alert('API密钥已复制到剪贴板！');
+                        alert(wpApiExtendedSettings.i18n.key_copied);
                     });
                 });
                 
@@ -123,7 +123,7 @@ jQuery(document).ready(function($) {
             } else {
                 $result.html(
                     '<div class="notice notice-error">' +
-                    '<p>❌ 强制生成失败: ' + response.data + '</p>' +
+                    '<p>❌ ' + wpApiExtendedSettings.i18n.force_generate_failed + ': ' + response.data + '</p>' +
                     '</div>'
                 ).show();
             }
@@ -131,12 +131,12 @@ jQuery(document).ready(function($) {
         .fail(function(xhr) {
             $result.html(
                 '<div class="notice notice-error">' +
-                '<p>❌ 请求失败: ' + (xhr.responseJSON ? xhr.responseJSON.data : xhr.statusText) + '</p>' +
+                '<p>❌ ' + wpApiExtendedSettings.i18n.request_failed + ': ' + (xhr.responseJSON ? xhr.responseJSON.data : xhr.statusText) + '</p>' +
                 '</div>'
             ).show();
         })
         .always(function() {
-            $button.prop('disabled', false).text('Force Generate Key');
+            $button.prop('disabled', false).text(wpApiExtendedSettings.i18n.force_generate_button);
         });
     });
     
@@ -144,15 +144,15 @@ jQuery(document).ready(function($) {
     $('#reset-all-keys').on('click', function() {
         var $button = $(this);
         
-        if (!confirm('⚠️ DANGER: This will delete ALL API keys for ALL users. This action cannot be undone. Continue?')) {
+        if (!confirm(wpApiExtendedSettings.i18n.confirm_reset_first)) {
             return;
         }
         
-        if (!confirm('Are you absolutely sure? All API keys will be permanently deleted.')) {
+        if (!confirm(wpApiExtendedSettings.i18n.confirm_reset_second)) {
             return;
         }
         
-        $button.prop('disabled', true).text('Resetting...');
+        $button.prop('disabled', true).text(wpApiExtendedSettings.i18n.resetting);
         
         $.ajax({
             url: wpApiExtendedSettings.ajaxurl,
@@ -164,16 +164,16 @@ jQuery(document).ready(function($) {
         })
         .done(function(response) {
             if (response.success) {
-                alert('All API keys have been reset successfully. The page will now reload.');
+                alert(wpApiExtendedSettings.i18n.reset_success);
                 location.reload();
             } else {
-                alert('Reset failed: ' + response.data);
-                $button.prop('disabled', false).text('Reset All Keys');
+                alert(wpApiExtendedSettings.i18n.reset_failed + ': ' + response.data);
+                $button.prop('disabled', false).text(wpApiExtendedSettings.i18n.reset_button);
             }
         })
         .fail(function(xhr) {
-            alert('Request failed: ' + (xhr.responseJSON ? xhr.responseJSON.data : xhr.statusText));
-            $button.prop('disabled', false).text('Reset All Keys');
+            alert(wpApiExtendedSettings.i18n.request_failed + ': ' + (xhr.responseJSON ? xhr.responseJSON.data : xhr.statusText));
+            $button.prop('disabled', false).text(wpApiExtendedSettings.i18n.reset_button);
         });
     });
     
@@ -199,13 +199,13 @@ jQuery(document).ready(function($) {
             if (response.success) {
                 location.reload();
             } else {
-                alert('撤销失败: ' + response.data);
-                $button.prop('disabled', false).text('Revoke Current Key');
+                alert(wpApiExtendedSettings.i18n.revoke_failed + ': ' + response.data);
+                $button.prop('disabled', false).text(wpApiExtendedSettings.i18n.revoke_button);
             }
         })
         .fail(function(xhr) {
-            alert('请求失败: ' + (xhr.responseJSON ? xhr.responseJSON.data : xhr.statusText));
-            $button.prop('disabled', false).text('Revoke Current Key');
+            alert(wpApiExtendedSettings.i18n.request_failed + ': ' + (xhr.responseJSON ? xhr.responseJSON.data : xhr.statusText));
+            $button.prop('disabled', false).text(wpApiExtendedSettings.i18n.revoke_button);
         });
     });
     
@@ -237,11 +237,11 @@ jQuery(document).ready(function($) {
                 $result.html(
                     '<div class="notice notice-success">' +
                     '<p>' + response.data.message + '</p>' +
-                    '<p><strong>Temporary Token:</strong> ' + response.data.temp_token + '</p>' +
-                    '<p><strong>Expires In:</strong> ' + response.data.expires_in + ' seconds</p>' +
+                    '<p><strong>' + wpApiExtendedSettings.i18n.temp_token + '</strong> ' + response.data.temp_token + '</p>' +
+                    '<p><strong>' + wpApiExtendedSettings.i18n.expires_in + '</strong> ' + response.data.expires_in + ' ' + wpApiExtendedSettings.i18n.seconds + '</p>' +
                     '</div>'
                 ).show();
-                $('#user-password').val(''); // Clear password field
+                $('#user-password').val(''); // 清空密码字段
             } else {
                 $result.html(
                     '<div class="notice notice-error">' +
@@ -253,291 +253,12 @@ jQuery(document).ready(function($) {
         .fail(function(error) {
             $result.html(
                 '<div class="notice notice-error">' +
-                '<p>Request failed: ' + error.responseText + '</p>' +
+                '<p>' + wpApiExtendedSettings.i18n.verify_failed + ': ' + error.responseText + '</p>' +
                 '</div>'
             ).show();
         })
         .always(function() {
-            $button.prop('disabled', false).text('Verify Password');
+            $button.prop('disabled', false).text(wpApiExtendedSettings.i18n.verify_button);
         });
     });
-    
-    // Test API
-    $('#test-api').on('click', function() {
-        var $button = $(this);
-        var $result = $('#api-result');
-        
-        $button.prop('disabled', true).text(wpApiExtendedSettings.i18n.requesting);
-        $result.hide().empty();
-        
-        // Send API request
-        $.ajax({
-            url: wpApiExtendedSettings.root + 'wp-api-extended/v1/posts',
-            method: 'GET',
-            beforeSend: function(xhr) {
-                // User needs to manually enter API key for testing
-                var apiKey = prompt(wpApiExtendedSettings.i18n.enter_api_key);
-                if (apiKey) {
-                    if (apiKey.startsWith('wpak_')) {
-                        xhr.setRequestHeader('X-API-Key', apiKey);
-                    } else {
-                        xhr.setRequestHeader('Authorization', 'Bearer ' + apiKey);
-                    }
-                }
-            },
-            data: {
-                per_page: 3
-            }
-        })
-        .done(function(response) {
-            $result.show().html('<pre>' + JSON.stringify(response, null, 2) + '</pre>');
-        })
-        .fail(function(error) {
-            $result.show().html(
-                '<div class="notice notice-error">' +
-                '<p>Request failed: ' + (error.responseJSON ? error.responseJSON.message : error.responseText) + '</p>' +
-                '</div>'
-            );
-        })
-        .always(function() {
-            $button.prop('disabled', false).text('Test Get Posts List');
-        });
-    });
-    
-    // Enter key triggers password verification
-    $('#user-password').on('keypress', function(e) {
-        if (e.which === 13) {
-            $('#verify-password').click();
-        }
-    });
-    
-    // Content Management - Test Get Posts
-    $('#get-posts-test').on('click', function() {
-        var $button = $(this);
-        var $result = $('#content-test-result');
-        
-        $button.prop('disabled', true);
-        $result.hide().html('<div class="notice notice-info">Loading...</div>').show();
-        
-        $.ajax({
-            url: wpApiExtendedSettings.root + 'wp-api-extended/v1/posts',
-            method: 'GET',
-            beforeSend: function(xhr) {
-                var apiKey = prompt(wpApiExtendedSettings.i18n.enter_api_key);
-                if (apiKey) {
-                    if (apiKey.startsWith('wpak_')) {
-                        xhr.setRequestHeader('X-API-Key', apiKey);
-                    } else {
-                        xhr.setRequestHeader('Authorization', 'Bearer ' + apiKey);
-                    }
-                }
-            },
-            data: {
-                per_page: 5
-            }
-        })
-        .done(function(response) {
-            $result.html(
-                '<div class="notice notice-success">' +
-                '<h4>Posts Retrieved Successfully</h4>' +
-                '<pre>' + JSON.stringify(response, null, 2) + '</pre>' +
-                '</div>'
-            ).show();
-        })
-        .fail(function(error) {
-            $result.html(
-                '<div class="notice notice-error">' +
-                '<p>Request failed: ' + (error.responseJSON ? error.responseJSON.message : error.responseText) + '</p>' +
-                '</div>'
-            ).show();
-        })
-        .always(function() {
-            $button.prop('disabled', false);
-        });
-    });
-    
-    // Content Management - Test Get Categories
-    $('#get-categories-test').on('click', function() {
-        var $button = $(this);
-        var $result = $('#content-test-result');
-        
-        $button.prop('disabled', true);
-        $result.hide().html('<div class="notice notice-info">Loading...</div>').show();
-        
-        $.ajax({
-            url: wpApiExtendedSettings.root + 'wp-api-extended/v1/categories',
-            method: 'GET',
-            beforeSend: function(xhr) {
-                var apiKey = prompt(wpApiExtendedSettings.i18n.enter_api_key);
-                if (apiKey) {
-                    if (apiKey.startsWith('wpak_')) {
-                        xhr.setRequestHeader('X-API-Key', apiKey);
-                    } else {
-                        xhr.setRequestHeader('Authorization', 'Bearer ' + apiKey);
-                    }
-                }
-            }
-        })
-        .done(function(response) {
-            $result.html(
-                '<div class="notice notice-success">' +
-                '<h4>Categories Retrieved Successfully</h4>' +
-                '<pre>' + JSON.stringify(response, null, 2) + '</pre>' +
-                '</div>'
-            ).show();
-        })
-        .fail(function(error) {
-            $result.html(
-                '<div class="notice notice-error">' +
-                '<p>Request failed: ' + (error.responseJSON ? error.responseJSON.message : error.responseText) + '</p>' +
-                '</div>'
-            ).show();
-        })
-        .always(function() {
-            $button.prop('disabled', false);
-        });
-    });
-    
-    // Content Management - Test Search
-    $('#search-posts-test').on('click', function() {
-        var $button = $(this);
-        var $result = $('#content-test-result');
-        var searchTerm = prompt('Enter search term:');
-        
-        if (!searchTerm) {
-            return;
-        }
-        
-        $button.prop('disabled', true);
-        $result.hide().html('<div class="notice notice-info">Searching...</div>').show();
-        
-        $.ajax({
-            url: wpApiExtendedSettings.root + 'wp-api-extended/v1/search',
-            method: 'GET',
-            beforeSend: function(xhr) {
-                var apiKey = prompt(wpApiExtendedSettings.i18n.enter_api_key);
-                if (apiKey) {
-                    if (apiKey.startsWith('wpak_')) {
-                        xhr.setRequestHeader('X-API-Key', apiKey);
-                    } else {
-                        xhr.setRequestHeader('Authorization', 'Bearer ' + apiKey);
-                    }
-                }
-            },
-            data: {
-                s: searchTerm
-            }
-        })
-        .done(function(response) {
-            $result.html(
-                '<div class="notice notice-success">' +
-                '<h4>Search Results</h4>' +
-                '<pre>' + JSON.stringify(response, null, 2) + '</pre>' +
-                '</div>'
-            ).show();
-        })
-        .fail(function(error) {
-            $result.html(
-                '<div class="notice notice-error">' +
-                '<p>Request failed: ' + (error.responseJSON ? error.responseJSON.message : error.responseText) + '</p>' +
-                '</div>'
-            ).show();
-        })
-        .always(function() {
-            $button.prop('disabled', false);
-        });
-    });
-    
-    // Media Management - Test Get Media
-    $('#get-media-test').on('click', function() {
-        var $button = $(this);
-        var $result = $('#media-test-result');
-        
-        $button.prop('disabled', true);
-        $result.hide().html('<div class="notice notice-info">Loading media...</div>').show();
-        
-        $.ajax({
-            url: wpApiExtendedSettings.root + 'wp-api-extended/v1/media',
-            method: 'GET',
-            beforeSend: function(xhr) {
-                var apiKey = prompt(wpApiExtendedSettings.i18n.enter_api_key);
-                if (apiKey) {
-                    if (apiKey.startsWith('wpak_')) {
-                        xhr.setRequestHeader('X-API-Key', apiKey);
-                    } else {
-                        xhr.setRequestHeader('Authorization', 'Bearer ' + apiKey);
-                    }
-                }
-            },
-            data: {
-                per_page: 12
-            }
-        })
-        .done(function(response) {
-            if (response.success && response.data.media) {
-                displayMediaLibrary(response.data.media);
-                $result.html(
-                    '<div class="notice notice-success">' +
-                    '<p>Media loaded successfully. Found ' + response.data.media.length + ' items.</p>' +
-                    '</div>'
-                ).show();
-            } else {
-                $result.html(
-                    '<div class="notice notice-error">' +
-                    '<p>Failed to load media</p>' +
-                    '</div>'
-                ).show();
-            }
-        })
-        .fail(function(error) {
-            $result.html(
-                '<div class="notice notice-error">' +
-                '<p>Request failed: ' + (error.responseJSON ? error.responseJSON.message : error.responseText) + '</p>' +
-                '</div>'
-            ).show();
-        })
-        .always(function() {
-            $button.prop('disabled', false);
-        });
-    });
-    
-    // Refresh Media Library
-    $('#refresh-media').on('click', function() {
-        $('#get-media-test').click();
-    });
-    
-    // Display media library
-    function displayMediaLibrary(mediaItems) {
-        var $library = $('#media-library');
-        
-        if (!mediaItems || mediaItems.length === 0) {
-            $library.html('<div class="notice notice-info">No media items found.</div>');
-            return;
-        }
-        
-        var html = '';
-        mediaItems.forEach(function(media) {
-            var thumbnailUrl = media.url;
-            if (media.sizes && media.sizes.thumbnail) {
-                thumbnailUrl = media.sizes.thumbnail.url;
-            }
-            
-            html += '<div class="media-item">';
-            if (media.mime_type && media.mime_type.startsWith('image/')) {
-                html += '<img src="' + thumbnailUrl + '" alt="' + media.title + '">';
-            } else {
-                html += '<div style="font-size: 3em;">📄</div>';
-            }
-            html += '<div class="media-title">' + media.title + '</div>';
-            html += '<div class="media-id">ID: ' + media.id + '</div>';
-            html += '</div>';
-        });
-        
-        $library.html(html);
-    }
-    
-    // Initialize media library on page load
-    if ($('#media-library').length) {
-        $('#refresh-media').click();
-    }
 });

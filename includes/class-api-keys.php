@@ -17,7 +17,7 @@ class WP_API_Extended_Keys {
         $table_name = $wpdb->prefix . self::$table_name;
         
         // 检查表是否已存在
-        if ($wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $table_name)) == $table_name) {
+        if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") == $table_name) {
             return true;
         }
         
@@ -84,27 +84,12 @@ class WP_API_Extended_Keys {
     }
     
     /**
-     * 生成API密钥
+     * 生成API密钥 - 修复版本
      */
     public static function generate_api_key($user_id) {
         global $wpdb;
         
-        // 验证用户ID有效性
-        if (!is_numeric($user_id) || $user_id <= 0 || !get_user_by('id', $user_id)) {
-            error_log('WP API Extended: Invalid user ID for generate: ' . $user_id);
-            return false;
-        }
-        
         $table_name = $wpdb->prefix . self::$table_name;
-        
-        // 确保表存在
-        if (!$wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $table_name))) {
-            $create_result = self::create_table();
-            if (!$create_result) {
-                error_log('WP API Extended: Failed to create table for generate key');
-                return false;
-            }
-        }
         
         // 检查是否已存在活跃密钥
         $existing_key = $wpdb->get_var($wpdb->prepare(
@@ -139,11 +124,9 @@ class WP_API_Extended_Keys {
             array(
                 'user_id' => $user_id,
                 'api_key' => $hashed_key,
-                'status' => 'active',
-                'created_at' => current_time('mysql'),
-                'updated_at' => current_time('mysql')
+                'status' => 'active'
             ),
-            array('%d', '%s', '%s', '%s', '%s')
+            array('%d', '%s', '%s')
         );
         
         if ($result === false) {
@@ -151,9 +134,6 @@ class WP_API_Extended_Keys {
             error_log('WP API Extended: SQL Error: ' . $wpdb->last_query);
             return false;
         }
-        
-        // 记录操作日志
-        self::log_key_action($user_id, 'generate', $api_key);
         
         // 返回原始密钥（只显示一次）
         return $api_key;
@@ -165,68 +145,36 @@ class WP_API_Extended_Keys {
     public static function force_generate_api_key($user_id) {
         global $wpdb;
         
-        // 1. 验证用户ID有效性
-        if (!is_numeric($user_id) || $user_id <= 0 || !get_user_by('id', $user_id)) {
-            error_log('WP API Extended: Invalid user ID for force generate: ' . $user_id);
-            return false;
-        }
-        
         $table_name = $wpdb->prefix . self::$table_name;
         
-        // 2. 安全检查表是否存在
-        $table_exists = $wpdb->get_var(
-            $wpdb->prepare("SHOW TABLES LIKE %s", $table_name)
-        );
-        
-        // 3. 表不存在时创建，并检查创建结果
-        if (!$table_exists) {
-            $create_result = self::create_table();
-            if (!$create_result) {
-                error_log('WP API Extended: Failed to create table for force generate');
-                return false;
-            }
+        // 确保表存在
+        if (!$wpdb->get_var("SHOW TABLES LIKE '$table_name'")) {
+            self::create_table();
         }
         
-        // 4. 删除用户所有记录，并检查删除结果
-        $delete_result = $wpdb->delete(
+        // 直接删除该用户的所有记录
+        $wpdb->delete(
             $table_name,
             array('user_id' => $user_id),
             array('%d')
         );
         
-        if ($delete_result === false) {
-            error_log('WP API Extended: Failed to delete old keys: ' . $wpdb->last_error);
-            error_log('WP API Extended: Delete query: ' . $wpdb->last_query);
-            // 即使删除失败也尝试生成新密钥，但记录错误
-        }
-        
-        // 5. 生成新密钥
+        // 生成新的密钥
         $api_key = self::generate_random_key();
         $hashed_key = self::hash_key($api_key);
         
-        // 6. 插入新密钥，并检查插入结果
-        $insert_result = $wpdb->insert(
+        // 插入新密钥
+        $result = $wpdb->insert(
             $table_name,
             array(
                 'user_id' => $user_id,
                 'api_key' => $hashed_key,
-                'status' => 'active',
-                'created_at' => current_time('mysql'),
-                'updated_at' => current_time('mysql')
+                'status' => 'active'
             ),
-            array('%d', '%s', '%s', '%s', '%s')
+            array('%d', '%s', '%s')
         );
         
-        if ($insert_result === false) {
-            error_log('WP API Extended: Failed to insert new key: ' . $wpdb->last_error);
-            error_log('WP API Extended: Insert query: ' . $wpdb->last_query);
-            return false;
-        }
-        
-        // 记录操作日志
-        self::log_key_action($user_id, 'force_generate', $api_key);
-        
-        return $api_key;
+        return $result ? $api_key : false;
     }
     
     /**
@@ -235,22 +183,13 @@ class WP_API_Extended_Keys {
     public static function revoke_api_key($user_id) {
         global $wpdb;
         
-        // 验证用户ID
-        if (!is_numeric($user_id) || $user_id <= 0 || !get_user_by('id', $user_id)) {
-            error_log('WP API Extended: Invalid user ID for revoke: ' . $user_id);
-            return false;
-        }
-        
         $table_name = $wpdb->prefix . self::$table_name;
         
         $result = $wpdb->update(
             $table_name,
-            array(
-                'status' => 'revoked',
-                'updated_at' => current_time('mysql')
-            ),
+            array('status' => 'revoked'),
             array('user_id' => $user_id, 'status' => 'active'),
-            array('%s', '%s'),
+            array('%s'),
             array('%d', '%s')
         );
         
@@ -259,7 +198,6 @@ class WP_API_Extended_Keys {
             return false;
         }
         
-        self::log_key_action($user_id, 'revoke');
         return $result;
     }
     
@@ -358,7 +296,7 @@ class WP_API_Extended_Keys {
         
         $table_name = $wpdb->prefix . self::$table_name;
         
-        return $wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $table_name)) == $table_name;
+        return $wpdb->get_var("SHOW TABLES LIKE '$table_name'") == $table_name;
     }
     
     /**
@@ -377,25 +315,6 @@ class WP_API_Extended_Keys {
             $result = $wpdb->query("DELETE FROM $table_name");
         }
         
-        if ($result !== false) {
-            error_log('WP API Extended: All API keys have been reset');
-        } else {
-            error_log('WP API Extended: Failed to reset API keys: ' . $wpdb->last_error);
-        }
-        
         return $result !== false;
-    }
-    
-    /**
-     * 记录密钥操作日志
-     */
-    private static function log_key_action($user_id, $action, $api_key = '') {
-        $log_entry = sprintf(
-            'User %d performed %s action. Key: %s',
-            $user_id,
-            $action,
-            $api_key ? substr($api_key, 0, 8) . '...' : 'N/A'
-        );
-        error_log('WP API Extended: ' . $log_entry);
     }
 }
